@@ -14,14 +14,17 @@ public class UserDao {
 	private String getUserquery = "SELECT * FROM users WHERE id = ?";
 	private String getCountquery = "SELECT count(*) FROM users WHERE 1=1";
 	
-
+	private ConnectionMaker conn;
 	
+	public void setConnectionMaker(ConnectionMaker conn){
+		this.conn = conn;
+	}	
 
 	public void insert(User user){	
 		Connection c = null;
 		PreparedStatement ps = null;
 		try{
-			c = new NConnectionMaker().connectionMaker();
+			c = conn.connectionMaker();
 			ps = c.prepareStatement(insertquery);
 			ps.setString(1, user.getId());
 			ps.setString(2, user.getName());
@@ -31,18 +34,10 @@ public class UserDao {
 			System.out.println(e);
 		}finally{
 			if( ps != null ){
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				try {	ps.close();		} catch (SQLException e) {	e.printStackTrace();	}
 			}
 			if( c != null ){
-				try {
-					c.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				try {	c.close();		} catch (SQLException e) {	e.printStackTrace();	}
 			}
 
 		}
@@ -52,7 +47,7 @@ public class UserDao {
 		Connection c = null;
 		PreparedStatement ps = null;
 		try{
-			c = new NConnectionMaker().connectionMaker();
+			c = conn.connectionMaker();
 			ps = c.prepareStatement(deleteAllquery);
 			ps.executeUpdate();
 		}catch(SQLException e){
@@ -84,7 +79,7 @@ public class UserDao {
 		ResultSet rs = null;
 		User user = null;
 		try{
-			c = new NConnectionMaker().connectionMaker();
+			c = conn.connectionMaker();
 			ps = c.prepareStatement(getUserquery);
 			ps.setString(1, id);
 			rs = ps.executeQuery();
@@ -132,7 +127,7 @@ public class UserDao {
 		ResultSet rs = null;
 		int count = 0;
 		try{
-			c = new NConnectionMaker().connectionMaker();
+			c = conn.connectionMaker();
 			ps = c.prepareStatement(getCountquery);
 			rs = ps.executeQuery();
 			if(rs.next()){

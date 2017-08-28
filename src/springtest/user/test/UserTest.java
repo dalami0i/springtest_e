@@ -1,11 +1,13 @@
 package springtest.user.test;
 
+import springtest.user.dao.DaoFactory;
 import springtest.user.dao.UserDao;
 import springtest.user.domain.User;
 
 public class UserTest {
 	public static void main (String[] args){
-		UserDao dao = new UserDao();
+		DaoFactory factory = new DaoFactory();		
+		UserDao dao = factory.userDao();
 		
 		User user = new User();
 		
